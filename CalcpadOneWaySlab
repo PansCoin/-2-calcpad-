@@ -1,0 +1,130 @@
+"I. Design of reinforced concrete single-span simply supported slab
+'1.Static scheme
+l_max,cl = 1535'cm
+l_min,cl = 295'cm
+l_max,cl/l_min,cl'>2
+'Therefore we have an one-direction spanning slab
+'The height of the slab is
+h_f16 = 12'cm
+l_cl,minhf = l_min,cl + h_f16'cm
+l_nom = l_min,cl + 25'cm
+'The effective span can be calculated as
+l_eff = min(l_cl,minhf; l_nom)'cm
+
+'2. Actions
+' 2.1 Characteristic values
+'  2.1.1 Permanent actions
+'Self weight of the slab
+(h_f16/100)*25'kN/m2
+'Floor finishes'
+0.05*22'kN/m2
+'Ceiling plaster
+0.02*18'kN/m2
+
+Σg_k = (h_f16/100)*25 + 0.05*22 + 0.02*18'kN/m2
+
+'2.1.2 Variableactions
+q_k,1 = 4.4'kN/m2
+
+'2.2 Design values
+' 2.2.1. Permanent actions: 
+g_d = 1.35*Σg_k'kN/m2
+
+' 2.2.2. variable actions
+q_d = 1.5*q_k,1'kN/m2
+
+' 2.2.3 Total 
+p = g_d + q_d'kN/m2
+
+'3. Static analysis 
+maxM_Ed = (p*l_eff^2)/8'N/m
+maxM_Ed = maxM_Ed/10000'kN/m
+
+MaxV_Ed = p*l_eff/2'N
+MaxV_Ed = MaxV_Ed/100'kN
+
+'4. Design of bending reinforcement
+'4.1 Design characteristics fo the materail 
+'- Design strength for concrete grade C25/30
+
+a_cc = 1'according to EC2
+f_ck = 25'mPa according to EC2
+γ_c = 1.5'according to EC2
+f_cd = (a_cc*f_ck)/γ_c'Ν/mm2
+'-	design strength for the reinforcement grade B500
+f_yk = 500'-Characterestic yield strength of steel reinforcement grade B500
+γ_s = 1.15'-safety coefficient according to EC2
+f_yd = f_yk/γ_s'N/mm2
+
+'4.2 Effective depth of the cross section 
+'cnom - is the nominal concrete cover
+c_nom = 25'mm
+'φ- is the diameter of the expected reinforcement bar
+φ = 10
+d = h_f16*10 - c_nom - 0.5*φ'mm
+
+'4.3 Design of the bending reinforcement
+b = 1000'mm We calculate per linear meter
+m_ed = (maxM_Ed*10^6)/(b*d^2*f_cd)'N/mm2 <'m_edlim = 0.295
+ξ = 0.5*(1 + SQRT(1 - 2*m_ed))
+'Required reinforcement: 
+A_sreq1 = (maxM_Ed*10^6)/(ξ*d*f_yd)'mm2/m'
+'Minimum area for reinforcement:
+'fctm - concrete strength for axial tension
+f_ctm = 2.6
+A_smin1 = 0.26*(f_ctm/f_yk)*b*d'mm2/m"
+A_smin1 = 0.0013*b*d
+
+'Final choice for area of reinforcement 
+A_s1 = max(A_sreq1; A_smin1)'mm2/m'
+'Provided reinforcement: 
+n = 6.67
+'6.67Φ10/15
+
+A_s,prov1 = 524'mm2/m'
+'Total:
+N = (n*l_max,cl)/100
+'therefore we need 103Φ12/20
+'Required steel ratio p and real bending steel ratio p1
+
+ρ = A_s1/(b*d)
+ρ_1 = A_s,prov1/(b*d)
+
+'Design for shear
+V_Ed,max = MaxV_Ed'kN/m
+C_Rdc = 0.18/1.5
+k = 1 + SQRT(200/d)'Therefore
+k = 2
+u_min = 0.035*(k^(2/3))*(f_ck^(1/2))'N/mm2
+V_Rd,c = C_Rdc*k*(100*ρ_1*f_ck)*b*d'N/m'
+minV_rd,c = u_min*b*d'N/m'
+'Finally 
+V_Rd,c = max(V_Rd,c; minV_rd,c)
+V_Rd,c = V_Rd,c/10000'kN/m'
+V_Ed,max'<'V_Rd,c
+'No shear reinforcement is required
+
+'Control of deflection
+ρ_0 = sqrt(f_ck)*10^-3
+ρ < ρ_0
+
+k1 = 1'for beam slab with leff<7m
+ld = k1*(11 + ((1.5*sqrt(f_ck)*ρ_0)/ρ) + 3.2*sqrt(f_ck)*(ρ_0/ρ - 1)^1.5)
+
+σ_s = (f_yk/1.15)*((Σg_k + 0.3*q_k,1)/(g_d + q_d))*(A_sreq1/A_s,prov1)'N/mm2
+k2 = 310/σ_s
+k3 = 1' for rectangular sections
+ld1 = k1*k2*k3*ld
+l_eff*10/d
+'No problem with the deflection in the spann
+
+
+
+
+
+
+
+
+
+
+
